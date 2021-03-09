@@ -19,7 +19,6 @@ public class Main {
         String orderBase = "orders.dat";
 
         goods = start.getCatalogFromBase(catalogBase);
-        orders = ord.getOrdersfromBase(orderBase);
 
         int chosenOperation = 0;
         System.out.println('\t' + "Добро пожаловать в тест-версию Simple Shop");
@@ -36,11 +35,7 @@ public class Main {
                 start.adminMode(goods,catalogBase,orderBase,orders);
                 break;
             case 2:
-                ord = ord.clientMode(goods, orders, start, orderBase, ord);
-                if(!ord.isEmpty()){
-                    orders.add(ord);
-                    ord.saveOrderToBase(orders,orderBase);
-                }
+                ord.clientMode(goods,start, orderBase, ord);
                 break;
 
             default:

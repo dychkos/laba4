@@ -116,7 +116,7 @@ public class Order {
     }
 
     public void showAllOrder(ArrayList<Order> ord,String fname){
-        ord = getOrdersfromBase(fname);
+        ord = getOrdersFromBase(fname);
         try{
             Order or =ord.get(0);
             System.out.println(ord);
@@ -178,12 +178,13 @@ public class Order {
 
 
     //подтверждения заказа
-    public boolean pushOrder(ArrayList<Order> orders, Order order) {
+    private boolean pushOrder(ArrayList<Order> orders, Order order) {
         if (order.isEmpty()) {
             System.out.println("У вас ещё нету заказов!");
             return false;
         } else {
             orders.add(order);
+
 
             return true;
         }
@@ -192,35 +193,37 @@ public class Order {
     }
 
     //сохранение заказа в базу
-    public void saveOrderToBase(ArrayList<Order> orders, String filename) {
+    private void saveOrderToBase(ArrayList<Order> orders, String filename) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
             oos.writeObject(orders);
-            System.out.println("Данные о заказах обновлены!");
+            System.out.println("Данные обновлены!");
         } catch (Exception ex) {
 
-            System.out.println("Ошибка в записи в файл "+ex.getMessage());
+            System.out.println("Ошибка" +ex.getMessage());
         }
 
     }
 
     //получить заказы из базы
-    public ArrayList<Order> getOrdersfromBase(String fname) {
+    private ArrayList<Order> getOrdersFromBase(String fname) {
         ArrayList<Order> ord = new ArrayList<Order>();
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fname))) {
 
             ord = ((ArrayList<Order>) ois.readObject());
         } catch (Exception ex) {
 
-            System.out.println(ex.getMessage());
+            System.out.println("Ошибка чтения"+ex.getMessage());
         }
         return ord;
 
     }
 
-    public Order clientMode(ArrayList<Catalog> list, ArrayList<Order> orders, Catalog ct, String fname, Order bufOrder) {
+    public void clientMode(ArrayList<Catalog> list,Catalog ct, String fname, Order bufOrder) {
         int chosenOperation = 0;
-        Order newOrder= new Order();
         int loop = 0;
+        ArrayList<Order> orders = new ArrayList<Order>();
+        orders = bufOrder.getOrdersFromBase(fname);
+
         while (loop != 1) {
             System.out.println("Выберите действие :" + '\n' + "0-Показать каталог"+'\n' +"1-Создать заказ" + '\n' + "2-Посмотреть заказ" + '\n' + "3-Редактировать заказ" + '\n' + "4-Подтвердить заказ" + '\n' + "5-Завершить работу");
             Scanner sc = new Scanner(System.in);
@@ -259,6 +262,8 @@ public class Order {
                         }
 
                     }
+
+                    //фиксирование количества товара
                     ct.saveCatalogToBase(list,"catalog.dat");
 
 
@@ -267,18 +272,18 @@ public class Order {
                         break;
                     }
 
-                    System.out.println("Ваш заказ добавлен в систему!");
-                    return bufOrder;
+                    bufOrder.saveOrderToBase(orders,fname);
+                    break;
                 case 5:
                     loop = 1;
                     break;
+
                 default:
                     System.out.println("Выбрана неверная операция!");
                     break;
 
             }
         }
-        return  bufOrder;
     }
 
     @Override

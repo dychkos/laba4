@@ -12,8 +12,7 @@ class Catalog implements Serializable {
     private int count;
 
 
-    public Catalog(int id, String name, String producer, int price, int count) {
-        this.id = id;
+    public Catalog( String name, String producer, int price, int count) {
         this.name = name;
         this.producer = producer;
         this.price = price;
@@ -28,24 +27,9 @@ class Catalog implements Serializable {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getProducer() {
         return producer;
-    }
-
-    public void setProducer(String producer) {
-        this.producer = producer;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
     }
 
     public int getCount() {
@@ -75,7 +59,7 @@ class Catalog implements Serializable {
         System.out.println("Введите количесвто товара:");
         int goodCount = sc.nextInt();
 
-        Catalog good = new Catalog(0, goodName, goodProducerName, goodPrice, goodCount);
+        Catalog good = new Catalog(goodName, goodProducerName, goodPrice, goodCount);
 
         return good;
 
@@ -113,7 +97,7 @@ class Catalog implements Serializable {
     public void saveCatalogToBase(ArrayList<Catalog> goods, String filename) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
             oos.writeObject(goods);
-            System.out.println("File has been written");
+            System.out.println("Данные обновлены!");
         } catch (Exception ex) {
 
             System.out.println(ex.getMessage());
@@ -180,7 +164,7 @@ class Catalog implements Serializable {
                 try {
                     soughtIndex = list.indexOf(foundGoods.get(0));
                 }catch (IndexOutOfBoundsException ex){
-                    System.out.println("EXEPTION");
+                    System.out.println("Повторите ввод!");
                 }
 
                 break;
